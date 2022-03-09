@@ -10,7 +10,6 @@ exports.register = async (req, res) => {
     email: joi.string().email().min(5),
     password: joi.string().min(3),
     phone: joi.number().min(9),
-    address: joi.string().min(5),
   });
 
   const { error } = schema.validate(req.body);
@@ -127,9 +126,15 @@ exports.checkAuth = async (req, res) => {
         status: "failed",
       });
     }
-    res.send({
+    res.status(200).send({
       status: "success",
-      data,
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+      },
     });
   } catch (error) {
     console.log(error);

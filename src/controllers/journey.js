@@ -58,7 +58,7 @@ exports.addJourney = async (req, res) => {
   }
 };
 
-exports.getProfile = async (req, res) => {
+exports.getJourneysUser = async (req, res) => {
   try {
     const profile = await Journey.findAll({
       where: { userId: req.user.id },
@@ -78,7 +78,20 @@ exports.getProfile = async (req, res) => {
 
     res.status(200).send({
       message: "success",
-      profile,
+      data: {
+        allprofile: profile.map((item) => ({
+          date: item.date,
+          description: item.description,
+          id: item.id,
+          image: item.image,
+          title: item.title,
+          userId: item.User.id,
+          name: item.User.name,
+          email: item.User.email,
+          phone: item.User.phone,
+          address: item.User.address,
+        })),
+      },
     });
   } catch (error) {
     console.log(error);
@@ -138,7 +151,18 @@ exports.getJourneyDetail = async (req, res) => {
     });
     res.status(200).send({
       message: "success",
-      journey,
+      journey: {
+        date: journey.date,
+        description: journey.description,
+        id: journey.id,
+        image: journey.image,
+        title: journey.title,
+        userId: journey.userId,
+        name: journey.User.name,
+        address: journey.User.address,
+        email: journey.User.email,
+        phone: journey.User.phone,
+      },
     });
   } catch (error) {
     console.log(error);

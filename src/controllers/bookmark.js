@@ -19,15 +19,20 @@ exports.addBookmark = async (req, res) => {
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
+
       include: [
         {
           model: User,
           as: "User",
+
           attributes: {
             exclude: ["createdAt", "updatedAt"],
           },
         },
       ],
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
     });
 
     for (let j = 0; j < getJourney.length; j++) {
@@ -60,12 +65,13 @@ exports.getBookmarks = async (req, res) => {
       },
       include: [
         {
-          model: User,
-          as: "User",
+          model: Journey,
+          as: "Journey",
           include: [
             {
-              model: Journey,
-              as: "Journey",
+              model: User,
+              as: "User",
+
               attributes: {
                 exclude: ["createdAt", "updatedAt"],
               },
@@ -81,6 +87,23 @@ exports.getBookmarks = async (req, res) => {
     res.status(200).send({
       message: "success",
       bookmarks,
+      // {
+      //   mybookmarks: bookmarks.map((item) => ({
+      //     id: item.id,
+      //     userId: item.User.id,
+      //     name: item.User.name,
+      //     email: item.User.email,
+      //     phone: item.User.phone,
+      //     address: item.User.address,
+      //     journey: item.User.Journey.map((items) => ({
+      //       id: items.id,
+      //       title: items.title,
+      //       description: items.description,
+      //       image: items.image,
+      //       date: items.date,
+      //     })),
+      //   })),
+      // },
     });
   } catch (error) {
     console.log(error);
