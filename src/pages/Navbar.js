@@ -1,14 +1,4 @@
-import {
-  Stack,
-  Button,
-  InputGroup,
-  FormControl,
-  Card,
-  Dropdown,
-  Image,
-} from "react-bootstrap";
-import { API, setAuthToken } from "../config/api";
-import imagePage from "../images/bg-home.png";
+import { Button, InputGroup, Dropdown, Image } from "react-bootstrap";
 import imageLogo from "../images/logo-journey.png";
 import imageLogo2 from "../images/Icon.png";
 import icon1 from "../images/icon1.png";
@@ -19,15 +9,14 @@ import profile from "../images/profile.png";
 import { ModalContext } from "../context/ModalContext";
 import { useContext } from "react";
 import { UserContext } from "../context/userContext";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  const { myId } = useParams();
   const [, , toggle] = useContext(ModalContext);
   const [user, setUser] = useContext(UserContext);
 
   return (
-    <div className="container p-0">
+    <div className="container p-0 shadow">
       {user ? (
         <>
           <div className="text-start px-5 py-2">
@@ -52,15 +41,15 @@ export default function Navbar() {
                         Profile
                       </Dropdown.Item>
 
-                      <Dropdown.Item
-                        href="/newjourney"
-                        className="mb-3 fw-bold"
-                      >
+                      <Dropdown.Item href="/journey" className="mb-3 fw-bold">
                         <Image src={icon2} className="mx-3" />
                         New Journey
                       </Dropdown.Item>
 
-                      <Dropdown.Item href="/bookmarks" className="mb-3 fw-bold">
+                      <Dropdown.Item
+                        href="/bookmarks"
+                        className="mb-3 px-4 fw-bold"
+                      >
                         <Image src={icon1} className="mx-3" />
                         Bookmark
                       </Dropdown.Item>
@@ -87,11 +76,13 @@ export default function Navbar() {
         <>
           <div
             className="jumbotron p-5 text-start shadow"
-            style={{ height: "53vh" }}
+            style={{ height: "29rem" }}
           >
             <div className="row mb-5">
               <div className="col">
-                <img src={imageLogo} alt="logoJourney" />
+                <Link to="/">
+                  <img src={imageLogo2} alt="logoJourney" />
+                </Link>
               </div>
               <div className="col d-flex justify-content-end align-items-center">
                 <Button

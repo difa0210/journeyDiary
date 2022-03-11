@@ -1,42 +1,34 @@
-import { useEffect, useState } from "react";
-import { Stack, Button, InputGroup, FormControl, Card } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
-import { API, setAuthToken } from "../config/api";
+import { useEffect, useState, useContext } from "react";
+import { Button, InputGroup, FormControl, Card, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { API } from "../config/api";
 import bookmarkIcon from "../images/Vector.png";
+import { ModalContext } from "../context/ModalContext";
+import { UserContext } from "../context/userContext";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { journeyId } = useParams();
-  const [getJourney, setGetJourney] = useState([]);
+  const [, , toggle] = useContext(ModalContext);
+  const [user] = useContext(UserContext);
   const [allJourney, setAllJourney] = useState();
-
-  // const [form, setForm] = useState({
-  //   journeyIds: "",
-  // });
-
-  // const { journeyIds } = form;
-  // const handleChange = (e) => {
-  //   setForm({
-  //     ...form,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
-
-  // const journey = async () => {
-  //   try {
-  //     const response = await API.get(`/journey/${journeyId}`);
-  //     setGetJourney(response.data.journey);
-  //     console.log(response.data.journey);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const [inputText, setInputText] = useState("");
+  const [message, setMessage] = useState(null);
 
   const journeys = async () => {
     try {
       const response = await API.get("/journeys");
-      setAllJourney(response.data.journeys);
-      console.log(response.data.journeys);
+      setAllJourney(
+        response.data.journeys.map((x) => ({
+          ...x,
+          isSelected: false,
+        }))
+      );
+      console.log(
+        response.data.journeys.map((x) => ({
+          ...x,
+          isSelected: false,
+        }))
+      );
     } catch (error) {
       console.log(error);
     }
@@ -46,10 +38,14 @@ export default function Home() {
     journeys();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleChange = (value, index) => {
+    allJourney[index].isSelected = value;
+    setAllJourney([...allJourney]);
+  };
+
+  const handleSubmit = async (e, id) => {
     e.preventDefault();
     try {
-      // Configuration
       const config = {
         headers: {
           "Content-type": "application/json",
@@ -57,19 +53,42 @@ export default function Home() {
       };
 
       const data = {
-        journeyIds: allJourney.id,
+        journeyId: allJourney.filter((x) => x.isSelected).map((x) => x.id),
       };
-
+      console.log(data);
       const body = JSON.stringify(data);
 
-      // Insert data user to database
-      const response = await API.post("/bookmark", body, config);
-      window.location.reload();
+      const response = await API.post(`/bookmark`, body, config);
       console.log(response);
+
+      if (response.data.message === "success") {
+        const alert = (
+          <Alert variant="success" className=" py-1 fw-bold">
+            Add Bookmark Success
+          </Alert>
+        );
+        setMessage(alert);
+      }
     } catch (error) {
       console.log(error.response);
     }
   };
+
+  const inputHandler = (e) => {
+    setInputText(e.target.value);
+  };
+
+  // let dataSearch = allJourney.data.filter((item) => {
+  //   return Object.keys(
+  //     item.some((key) =>
+  //       item[key]
+  //         .toString()
+  //         .toLowerCase()
+  //         .includes(journey.toString().toLowerCase())
+  //     )
+  //   );
+  // });
+
   return (
     <div className="container py-5" style={{ backgroundColor: "#ececec" }}>
       <div className="container row text-black mx-auto mb-5 fw-bold">
@@ -80,36 +99,46 @@ export default function Home() {
       <div className="container row mx-auto mb-3" style={{ width: "68rem" }}>
         <InputGroup className="mb-5">
           <FormControl
+            onChange={inputHandler}
             className="shadow"
             style={{ background: "white", borderWidth: 0 }}
+            value={inputText}
             placeholder="Search Journey"
-            aria-label="Recipient's username"
-            aria-describedby=""
           />
-          <Button className="btn-blue shadow" variant="" id="">
+
+          <Button className="btn-blue shadow fw-bold" variant="" id="">
             Search
           </Button>
         </InputGroup>
       </div>
       <div className="container row mx-auto" style={{ width: "77rem" }}>
+        <div>{message && message}</div>
         {allJourney &&
           allJourney.map((item, index) => (
-            <div
-              className="col-3 my-3 mx-auto"
-              key={index}
-              style={{ cursor: "pointer" }}
-            >
+            <div className="col-3 my-3 mx-start" key={index}>
               <Card
                 style={{ width: "16.5rem", borderRadius: "0.5rem" }}
                 className="shadow mx-auto"
-                onClick={() => navigate(`/detailJourney/${item.id}`)}
               >
                 <Card.Img
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    navigate(`/detailJourney/${item.id}`);
+                  }}
                   variant="top"
                   src={`http://localhost:5000/uploads/${item.image}`}
                 />
                 <span
+                  onClick={(e) => {
+                    if (user) {
+                      handleChange(!item.isSelected, index);
+                      handleSubmit(e, item.id);
+                    } else {
+                      toggle("Login");
+                    }
+                  }}
                   style={{
+                    cursor: "pointer",
                     background: "white",
                     borderRadius: "0.1rem",
                     margin: "0.5rem",
@@ -123,14 +152,17 @@ export default function Home() {
                     {item.title}
                   </Card.Title>
                   <p className="opacity-50" style={{ fontSize: "0.8rem" }}>
-                    02-10-2020
+                    {new Date(item.updatedAt).toDateString()}
                   </p>
                   <Card.Text
                     className="text-truncate"
-                    style={{ fontSize: "0.9rem" }}
-                  >
-                    {item.description}
-                  </Card.Text>
+                    style={{
+                      fontSize: "0.9rem",
+                      minHeight: "2.5rem",
+                      maxHeight: "2.5rem",
+                    }}
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  ></Card.Text>
                 </Card.Body>
               </Card>
             </div>

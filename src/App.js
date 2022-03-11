@@ -4,13 +4,11 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { API, setAuthToken } from "./config/api";
 import {
   Home,
-  Journey,
   Navbar,
   Bookmark,
   Profile,
   DetailJourney,
   NewJourney,
-  NavbarLogin,
 } from "./pages/Index";
 import ModalRegister from "./components/ModalRegister";
 import ModalLogin from "./components/ModalLogin";
@@ -65,15 +63,11 @@ export default function App() {
         <Route
           exact
           path="/detailJourney/:journeyId"
-          element={
-            <UserRoute>
-              <DetailJourney />
-            </UserRoute>
-          }
+          element={<DetailJourney />}
         />
         <Route
           exact
-          path="/newjourney"
+          path="/journey"
           element={
             <UserRoute>
               <NewJourney />

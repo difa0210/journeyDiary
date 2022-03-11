@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Stack, Button, InputGroup, FormControl, Card } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Card } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { API, setAuthToken } from "../config/api";
 import bookmarkIcon from "../images/Vector.png";
 
 export default function Bookmark() {
-  const { myId } = useParams();
   const [getBookmarks, setGetBookmarks] = useState();
+  const navigate = useNavigate();
 
   const bookmarks = async () => {
     try {
@@ -23,6 +23,17 @@ export default function Bookmark() {
     bookmarks();
   }, []);
 
+  const handleDelete = async (e, id) => {
+    try {
+      e.preventDefault();
+
+      await API.delete(`/bookmark/${id}`);
+      await bookmarks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div
       className="container px-0 py-5"
@@ -37,18 +48,24 @@ export default function Bookmark() {
       <div className="container row mx-auto" style={{ width: "77rem" }}>
         {getBookmarks &&
           getBookmarks.map((item, index) => (
-            <div key={index} className="col-3 my-3 mx-auto px-0">
+            <div key={index} className="col-3 my-3 mx-start px-0">
               <Card
                 style={{ width: "16.5rem", borderRadius: "0.5rem" }}
                 className="shadow mx-auto px-0"
               >
                 <Card.Img
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    navigate(`/detailJourney/${item.journeyId}`);
+                  }}
                   variant="top"
                   src={`http://localhost:5000/uploads/${item.Journey.image}`}
                 />
                 <span
-                  onClick=""
+                  onClick={(e) => handleDelete(e, item.id)}
                   style={{
+                    cursor: "pointer",
+                    opacity: "60%",
                     background: "white",
                     borderRadius: "0.1rem",
                     margin: "0.5rem",
@@ -63,11 +80,19 @@ export default function Bookmark() {
                     {item.Journey.title}
                   </Card.Title>
                   <p className="opacity-50" style={{ fontSize: "0.8rem" }}>
-                    02-10-2020
+                    {new Date(item.updatedAt).toDateString()}
                   </p>
-                  <Card.Text className="text-truncate">
-                    {item.Journey.description}
-                  </Card.Text>
+                  <Card.Text
+                    className="text-truncate"
+                    style={{
+                      fontSize: "0.9rem",
+                      minHeight: "2.5rem",
+                      maxHeight: "2.5rem",
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: item.Journey.description,
+                    }}
+                  ></Card.Text>
                 </Card.Body>
               </Card>
             </div>

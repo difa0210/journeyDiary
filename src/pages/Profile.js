@@ -1,24 +1,13 @@
-import {
-  Stack,
-  Button,
-  InputGroup,
-  FormControl,
-  Card,
-  Image,
-} from "react-bootstrap";
+import { Card, Image } from "react-bootstrap";
 import { API, setAuthToken } from "../config/api";
 import imageProfile from "../images/profile2.png";
-import bm1 from "../images/bm-1.png";
-import { useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../context/userContext";
-import bookmarkIcon from "../images/Vector.png";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function Profile() {
-  const { myId } = useParams();
+  const navigate = useNavigate();
   const [getJourney, setGetJourney] = useState();
   const [getProfile, setGetProfile] = useState();
-  const [user, setUser] = useContext(UserContext);
 
   const myJourney = async () => {
     try {
@@ -36,11 +25,19 @@ export default function Profile() {
     myJourney();
   }, []);
 
+  const handleDelete = async (e, id) => {
+    try {
+      e.preventDefault();
+
+      await API.delete(`/deletejourney/${id}`);
+      await myJourney();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div
-      className="container px-0 py-5"
-      style={{ backgroundColor: "#ececec", height: "100vh" }}
-    >
+    <div className="container px-0 py-5" style={{ backgroundColor: "#ececec" }}>
       <div className="container row mx-auto mb-4 fw-bold">
         <p className="" style={{ fontSize: "2.5rem" }}>
           My Profile
@@ -57,42 +54,52 @@ export default function Profile() {
           </p>
         </div>
       </div>
-      <div
-        className="container row mx-auto d-flex justify-content-center aling-items-center"
-        style={{ width: "77rem" }}
-      >
+      <div className="container row mx-auto" style={{ width: "77rem" }}>
         {getJourney &&
           getJourney.map((item, index) => (
-            <div key={index} className="col-3 m-4 ">
+            <div key={index} className="col-3 my-3 mx-start">
               <Card
                 style={{ width: "16.5rem", borderRadius: "0.5rem" }}
-                className="shadow"
+                className="shadow mx-auto"
               >
                 <Card.Img
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    navigate(`/detailJourney/${item.id}`);
+                  }}
                   variant="top"
                   src={`http://localhost:5000/uploads/${item.image}`}
                 />
                 <span
-                  onClick=""
+                  onClick={(e) => handleDelete(e, item.id)}
                   style={{
-                    background: "white",
-                    borderRadius: "0.1rem",
+                    cursor: "pointer",
+                    background: "rgb(194, 8, 8)",
+                    borderRadius: "0.3rem",
+                    color: "white",
                     margin: "0.5rem",
+                    fontSize: "0.7rem",
                   }}
-                  className="shadow position-absolute top-0 end-0 p-2"
+                  className="fw-bold shadow position-absolute top-55 end-0 px-2 py-1"
                 >
-                  <img src={bookmarkIcon} alt="bm" />
+                  Delete
                 </span>
                 <Card.Body>
                   <Card.Title className="text-truncate">
                     {item.title}
                   </Card.Title>
                   <p className="opacity-50" style={{ fontSize: "0.8rem" }}>
-                    02-10-2020
+                    {new Date(item.updatedAt).toDateString()}
                   </p>
-                  <Card.Text className="text-truncate">
-                    {item.description}
-                  </Card.Text>
+                  <Card.Text
+                    className="text-truncate"
+                    style={{
+                      fontSize: "0.9rem",
+                      minHeight: "2.5rem",
+                      maxHeight: "2.5rem",
+                    }}
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  ></Card.Text>
                 </Card.Body>
               </Card>
             </div>

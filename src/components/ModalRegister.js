@@ -1,6 +1,5 @@
 import { React, useContext, useState } from "react";
 import { Button, Form, Modal, Alert } from "react-bootstrap";
-
 import { API } from "../config/api";
 import { ModalContext } from "../context/ModalContext";
 
@@ -161,7 +160,7 @@ export default function ModalRegister() {
               placeholder="Input Phone Number"
             />
           </Form.Group>
-          <Form.Group className="mb-5" controlId="formBasicPassword">
+          <Form.Group className="mb-5" controlId="formBasic">
             <Form.Control
               className="shadow"
               style={{

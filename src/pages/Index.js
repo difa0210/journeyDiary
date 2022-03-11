@@ -1,5 +1,4 @@
 import Home from "./Home";
-
 import Navbar from "./Navbar";
 import Bookmark from "./Bookmark";
 import Profile from "./Profile";

@@ -1,7 +1,5 @@
 import { useContext, useState } from "react";
-
 import { Button, Form, Modal } from "react-bootstrap";
-
 import { API } from "../config/api";
 import { ModalContext } from "../context/ModalContext";
 
@@ -25,17 +23,15 @@ export default function ModalLogin() {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      // Configuration Content-type
+
       const config = {
         headers: {
           "Content-type": "application/json",
         },
       };
 
-      // Data body
       const body = JSON.stringify(form);
 
-      // Insert data user to database
       const response = await API.post("/login", body, config);
       window.location.reload();
       localStorage.setItem("token", response.data.token);
