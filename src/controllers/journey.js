@@ -24,7 +24,7 @@ exports.addJourney = async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       image: req.file.filename,
-      date: req.date,
+      date: new Date(),
     });
 
     const getJourney = await Journey.findOne({
@@ -32,14 +32,14 @@ exports.addJourney = async (req, res) => {
         id: newJourney.id,
       },
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["createdAt"],
       },
       include: [
         {
           model: User,
           as: "User",
           attributes: {
-            exclude: ["createdAt", "updatedAt"],
+            exclude: ["updatedAt"],
           },
         },
       ],
@@ -63,7 +63,7 @@ exports.getJourneysUser = async (req, res) => {
     const profile = await Journey.findAll({
       where: { userId: req.user.id },
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["createdAt"],
       },
       include: [
         {
@@ -90,6 +90,7 @@ exports.getJourneysUser = async (req, res) => {
           email: item.User.email,
           phone: item.User.phone,
           address: item.User.address,
+          updatedAt: item.updatedAt,
         })),
       },
     });
@@ -106,14 +107,14 @@ exports.getJourneys = async (req, res) => {
   try {
     const journeys = await Journey.findAll({
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["createdAt"],
       },
       include: [
         {
           model: User,
           as: "User",
           attributes: {
-            exclude: ["createdAt", "updatedAt"],
+            exclude: ["createdAt", "updatedAt", "password"],
           },
         },
       ],
@@ -137,7 +138,7 @@ exports.getJourneyDetail = async (req, res) => {
     const journey = await Journey.findOne({
       where: { id },
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["createdAt"],
       },
       include: [
         {
@@ -162,6 +163,7 @@ exports.getJourneyDetail = async (req, res) => {
         address: journey.User.address,
         email: journey.User.email,
         phone: journey.User.phone,
+        updatedAt: journey.updatedAt,
       },
     });
   } catch (error) {
@@ -169,6 +171,68 @@ exports.getJourneyDetail = async (req, res) => {
     res.send({
       status: "failed",
       message: "server error",
+    });
+  }
+};
+
+exports.getJourneySearch = async (req, res) => {
+  try {
+    const journey = await Journey.findAll({
+      where: { title: req.title },
+      attributes: {
+        exclude: ["createdAt"],
+      },
+      include: [
+        {
+          model: User,
+          as: "User",
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
+        },
+      ],
+    });
+    res.status(200).send({
+      message: "success",
+      journey: {
+        date: journey.date,
+        description: journey.description,
+        id: journey.id,
+        image: journey.image,
+        title: journey.title,
+        userId: journey.userId,
+        name: journey.User.name,
+        address: journey.User.address,
+        email: journey.User.email,
+        phone: journey.User.phone,
+        updatedAt: journey.updatedAt,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "failed",
+      message: "server error",
+    });
+  }
+};
+
+exports.deleteJourney = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Journey.destroy({
+      where: {
+        id,
+      },
+    });
+    res.status(201).send({
+      status: "delete success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "failed",
+      message: "Server Error",
     });
   }
 };

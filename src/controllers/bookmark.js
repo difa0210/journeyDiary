@@ -3,9 +3,8 @@ const { Op } = require("sequelize");
 const { User, Journey, Bookmark } = require("../../models");
 
 exports.addBookmark = async (req, res) => {
-  const { journeyIds } = req.body;
   const schema = joi.object({
-    journeyIds: joi.array(),
+    journeyId: joi.array(),
   });
 
   const { error } = schema.validate(req.body);
@@ -14,17 +13,16 @@ exports.addBookmark = async (req, res) => {
       error,
     });
   try {
-    const getJourney = await Journey.findAll({
-      where: { id: { [Op.in]: journeyIds } },
+    const body = req.body;
+    const getJourney = await Journey.findOne({
+      where: { id: body.journeyId },
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["createdAt"],
       },
-
       include: [
         {
           model: User,
           as: "User",
-
           attributes: {
             exclude: ["createdAt", "updatedAt"],
           },
@@ -35,17 +33,16 @@ exports.addBookmark = async (req, res) => {
       },
     });
 
-    for (let j = 0; j < getJourney.length; j++) {
-      await Bookmark.create({
-        userId: req.user.id,
-        journeyId: getJourney[j].id,
-      });
-    }
+    const getBookmark = await Bookmark.create({
+      userId: req.user.id,
+      journeyId: getJourney.id,
+    });
+
     console.log(getJourney);
 
     res.status(200).send({
       message: "success",
-      data: { getJourney },
+      data: { getBookmark },
     });
   } catch (error) {
     console.log(error);
@@ -61,7 +58,7 @@ exports.getBookmarks = async (req, res) => {
     const bookmarks = await Bookmark.findAll({
       where: { userId: req.user.id },
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["createdAt"],
       },
       include: [
         {
@@ -87,29 +84,32 @@ exports.getBookmarks = async (req, res) => {
     res.status(200).send({
       message: "success",
       bookmarks,
-      // {
-      //   mybookmarks: bookmarks.map((item) => ({
-      //     id: item.id,
-      //     userId: item.User.id,
-      //     name: item.User.name,
-      //     email: item.User.email,
-      //     phone: item.User.phone,
-      //     address: item.User.address,
-      //     journey: item.User.Journey.map((items) => ({
-      //       id: items.id,
-      //       title: items.title,
-      //       description: items.description,
-      //       image: items.image,
-      //       date: items.date,
-      //     })),
-      //   })),
-      // },
     });
   } catch (error) {
     console.log(error);
     res.send({
       status: "failed",
       message: "server error",
+    });
+  }
+};
+
+exports.deleteBookmark = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Bookmark.destroy({
+      where: {
+        id,
+      },
+    });
+    res.status(201).send({
+      status: "delete success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "failed",
+      message: "Server Error",
     });
   }
 };
