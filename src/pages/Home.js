@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import { Button, InputGroup, FormControl, Card, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { API } from "../config/api";
-import bookmarkIcon from "../images/Vector.png";
+import { API, setAuthToken } from "../config/api";
+import bookmarkIcon from "../images/Vector.svg";
 import { ModalContext } from "../context/ModalContext";
 import { UserContext } from "../context/userContext";
 
@@ -10,41 +10,60 @@ export default function Home() {
   const navigate = useNavigate();
   const [, , toggle] = useContext(ModalContext);
   const [user] = useContext(UserContext);
-  const [allJourney, setAllJourney] = useState();
-  const [inputText, setInputText] = useState("");
+  console.log(user);
+  const [allJourney, setAllJourney] = useState([]);
+  const [allBookmark, setAllBookmark] = useState();
+  const [searchQuery, setSearchQuery] = useState("");
   const [message, setMessage] = useState(null);
 
-  const journeys = async () => {
+  const search = async (e, q, userId) => {
+    e.preventDefault();
+    try {
+      const response = await API.get(`/journey-search?title=${q}`);
+      setAllJourney(
+        response.data.journeys.map((x) => ({
+          ...x,
+          isBookmark: x.Bookmark.find((x) => x.userId === userId)
+            ? true
+            : false,
+        }))
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const journeys = async (userId) => {
     try {
       const response = await API.get("/journeys");
       setAllJourney(
         response.data.journeys.map((x) => ({
           ...x,
-          isSelected: false,
+          isBookmark: x.Bookmark.find((x) => x.userId === userId)
+            ? true
+            : false,
         }))
       );
-      console.log(
-        response.data.journeys.map((x) => ({
-          ...x,
-          isSelected: false,
-        }))
-      );
+
+      console.log(response.data.journeys.map((x) => x.Bookmark));
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    journeys();
-  }, []);
+    if (user) {
+      journeys(user.id);
+    } else {
+      journeys();
+    }
+  }, [user]);
 
-  const handleChange = (value, index) => {
-    allJourney[index].isSelected = value;
-    setAllJourney([...allJourney]);
-  };
-
-  const handleSubmit = async (e, id) => {
+  const handleSubmit = async (e, index, id, value) => {
     e.preventDefault();
+    allJourney[index].isBookmark = value;
+    setAllJourney([...allJourney]);
     try {
       const config = {
         headers: {
@@ -53,18 +72,21 @@ export default function Home() {
       };
 
       const data = {
-        journeyId: allJourney.filter((x) => x.isSelected).map((x) => x.id),
+        journeyId: id,
+        value,
       };
       console.log(data);
       const body = JSON.stringify(data);
 
       const response = await API.post(`/bookmark`, body, config);
-      console.log(response);
 
       if (response.data.message === "success") {
         const alert = (
-          <Alert variant="success" className=" py-1 fw-bold">
-            Add Bookmark Success
+          <Alert
+            variant={value ? "success" : "danger"}
+            className=" py-1 fw-bold"
+          >
+            {value ? "Add Bookmark Success" : "Delete Bookmark success"}
           </Alert>
         );
         setMessage(alert);
@@ -74,9 +96,25 @@ export default function Home() {
     }
   };
 
-  const inputHandler = (e) => {
-    setInputText(e.target.value);
-  };
+  const [inputText, setInputText] = useState("");
+  const [filterResults, setFilterResults] = useState([]);
+
+  // const inputHandler = (searchValue) => {
+  //   setInputText(searchValue);
+  //   if (inputText !== "") {
+  //     const filterData = allJourney
+  //       .map((x) => x.title)
+  //       .filter((item) => {
+  //         return Object.values(item)
+  //           .join("")
+  //           .toLowerCase()
+  //           .includes(inputText.toLowerCase());
+  //       });
+  //     setFilterResults(filterData);
+  //   } else {
+  //     setFilterResults(allJourney);
+  //   }
+  // };
 
   // let dataSearch = allJourney.data.filter((item) => {
   //   return Object.keys(
@@ -97,19 +135,26 @@ export default function Home() {
         </p>
       </div>
       <div className="container row mx-auto mb-3" style={{ width: "68rem" }}>
-        <InputGroup className="mb-5">
-          <FormControl
-            onChange={inputHandler}
-            className="shadow"
-            style={{ background: "white", borderWidth: 0 }}
-            value={inputText}
-            placeholder="Search Journey"
-          />
+        <form onSubmit={(e) => search(e, searchQuery, user?.id)}>
+          <InputGroup className="mb-5">
+            <FormControl
+              className="shadow"
+              style={{ background: "white", borderWidth: 0 }}
+              placeholder="Search Journey"
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
 
-          <Button className="btn-blue shadow fw-bold" variant="" id="">
-            Search
-          </Button>
-        </InputGroup>
+            <Button
+              className="btn-blue shadow fw-bold"
+              variant=""
+              type="submit"
+              id=""
+              onClick={(e) => search(e, searchQuery, user?.id)}
+            >
+              Search
+            </Button>
+          </InputGroup>
+        </form>
       </div>
       <div className="container row mx-auto" style={{ width: "77rem" }}>
         <div>{message && message}</div>
@@ -131,21 +176,38 @@ export default function Home() {
                 <span
                   onClick={(e) => {
                     if (user) {
-                      handleChange(!item.isSelected, index);
-                      handleSubmit(e, item.id);
+                      // handleChange(!item.isSelected, index);
+                      handleSubmit(e, index, item.id, !item.isBookmark);
                     } else {
                       toggle("Login");
                     }
                   }}
-                  style={{
-                    cursor: "pointer",
-                    background: "white",
-                    borderRadius: "0.1rem",
-                    margin: "0.5rem",
-                  }}
-                  className="shadow position-absolute top-0 end-0 p-2"
                 >
-                  <img src={bookmarkIcon} alt="bm" />
+                  {user && (
+                    <span
+                      className="shadow position-absolute top-0 end-0 p-2"
+                      style={{
+                        cursor: "pointer",
+                        background: "white",
+                        borderRadius: "0.1rem",
+                        margin: "0.5rem",
+                      }}
+                    >
+                      {item.isBookmark ? (
+                        <img
+                          style={{ backgroundColor: "blue" }}
+                          src={bookmarkIcon}
+                          alt="bm"
+                        />
+                      ) : (
+                        <img
+                          style={{ backgroundColor: "white" }}
+                          src={bookmarkIcon}
+                          alt="bm"
+                        />
+                      )}
+                    </span>
+                  )}
                 </span>
                 <Card.Body>
                   <Card.Title className="text-truncate">

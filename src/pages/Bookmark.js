@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { API, setAuthToken } from "../config/api";
-import bookmarkIcon from "../images/Vector.png";
+import bookmarkIcon from "../images/Vector.svg";
 
 export default function Bookmark() {
   const [getBookmarks, setGetBookmarks] = useState();
@@ -72,7 +72,11 @@ export default function Bookmark() {
                   }}
                   className="shadow position-absolute top-0 end-0 p-2"
                 >
-                  <img src={bookmarkIcon} alt="bm" />
+                  <img
+                    style={{ backgroundColor: "blue" }}
+                    src={bookmarkIcon}
+                    alt="bm"
+                  />
                 </span>
 
                 <Card.Body>
