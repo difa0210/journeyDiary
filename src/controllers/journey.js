@@ -1,6 +1,7 @@
 const joi = require("joi");
+const { Op } = require("sequelize");
 
-const { User, Journey } = require("../../models");
+const { User, Journey, Bookmark } = require("../../models");
 
 exports.addJourney = async (req, res) => {
   const schema = joi.object({
@@ -113,8 +114,18 @@ exports.getJourneys = async (req, res) => {
         {
           model: User,
           as: "User",
+
           attributes: {
             exclude: ["createdAt", "updatedAt", "password"],
+          },
+        },
+      ],
+      include: [
+        {
+          model: Bookmark,
+          as: "Bookmark",
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "password", "journeyId"],
           },
         },
       ],
@@ -177,8 +188,8 @@ exports.getJourneyDetail = async (req, res) => {
 
 exports.getJourneySearch = async (req, res) => {
   try {
-    const journey = await Journey.findAll({
-      where: { title: req.title },
+    const journeys = await Journey.findAll({
+      where: { title: { [Op.like]: `%${req.query.title}%` } },
       attributes: {
         exclude: ["createdAt"],
       },
@@ -186,27 +197,25 @@ exports.getJourneySearch = async (req, res) => {
         {
           model: User,
           as: "User",
+
           attributes: {
-            exclude: ["createdAt", "updatedAt"],
+            exclude: ["createdAt", "updatedAt", "password"],
+          },
+        },
+      ],
+      include: [
+        {
+          model: Bookmark,
+          as: "Bookmark",
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "password", "journeyId"],
           },
         },
       ],
     });
     res.status(200).send({
       message: "success",
-      journey: {
-        date: journey.date,
-        description: journey.description,
-        id: journey.id,
-        image: journey.image,
-        title: journey.title,
-        userId: journey.userId,
-        name: journey.User.name,
-        address: journey.User.address,
-        email: journey.User.email,
-        phone: journey.User.phone,
-        updatedAt: journey.updatedAt,
-      },
+      journeys,
     });
   } catch (error) {
     console.log(error);

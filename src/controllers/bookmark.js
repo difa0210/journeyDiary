@@ -4,7 +4,8 @@ const { User, Journey, Bookmark } = require("../../models");
 
 exports.addBookmark = async (req, res) => {
   const schema = joi.object({
-    journeyId: joi.array(),
+    journeyId: joi.number(),
+    value: joi.boolean(),
   });
 
   const { error } = schema.validate(req.body);
@@ -14,35 +15,22 @@ exports.addBookmark = async (req, res) => {
     });
   try {
     const body = req.body;
-    const getJourney = await Journey.findOne({
-      where: { id: body.journeyId },
-      attributes: {
-        exclude: ["createdAt"],
-      },
-      include: [
-        {
-          model: User,
-          as: "User",
-          attributes: {
-            exclude: ["createdAt", "updatedAt"],
-          },
-        },
-      ],
-      attributes: {
-        exclude: ["createdAt", "updatedAt"],
-      },
-    });
 
-    const getBookmark = await Bookmark.create({
-      userId: req.user.id,
-      journeyId: getJourney.id,
-    });
-
-    console.log(getJourney);
+    let data;
+    if (body.value) {
+      data = await Bookmark.create({
+        userId: req.user.id,
+        journeyId: body.journeyId,
+      });
+    } else {
+      data = await Bookmark.destroy({
+        where: { journeyId: body.journeyId, userId: req.user.id },
+      });
+    }
 
     res.status(200).send({
       message: "success",
-      data: { getBookmark },
+      data,
     });
   } catch (error) {
     console.log(error);

@@ -28,7 +28,7 @@ router.get("/bookmarks", auth, getBookmarks);
 router.get("/my-journeys", auth, getJourneysUser);
 router.get("/journeys", getJourneys);
 router.get("/journey/:id", getJourneyDetail);
-router.get("/journey-search/:title", getJourneySearch);
+router.get("/journey-search", getJourneySearch);
 router.delete("/bookmark/:id", deleteBookmark);
 router.delete("/deletejourney/:id", deleteJourney);
 
