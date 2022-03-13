@@ -10,6 +10,7 @@ const {
   getJourneyDetail,
   deleteJourney,
   getJourneySearch,
+  updateJourney,
 } = require("../controllers/journey");
 const {
   addBookmark,
@@ -22,6 +23,7 @@ router.post("/register", uploadFile("image"), register);
 router.post("/login", login);
 router.post("/journey", auth, uploadFile("image"), addJourney);
 router.post("/bookmark", auth, addBookmark);
+router.patch("/journey/:id", auth, uploadFile("image"), updateJourney);
 router.get("/check-auth", auth, checkAuth);
 router.get("/profile/:id", auth, profile);
 router.get("/bookmarks", auth, getBookmarks);

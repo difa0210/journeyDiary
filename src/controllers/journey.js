@@ -59,6 +59,43 @@ exports.addJourney = async (req, res) => {
   }
 };
 
+exports.updateJourney = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const file = req.file.filename;
+    const data = { body, file };
+    await Journey.update(
+      {
+        ...data,
+        title: req.body.title,
+        description: req.body.description,
+        image: req.file.filename,
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+
+    const updateJourney = await Journey.findOne({ where: { id } });
+    res.status(201).send({
+      status: "success",
+      data: {
+        updateJourney,
+      },
+      message: "update product success",
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "failed",
+      message: "server error",
+    });
+  }
+};
+
 exports.getJourneysUser = async (req, res) => {
   try {
     const profile = await Journey.findAll({
