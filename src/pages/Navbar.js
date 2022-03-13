@@ -12,7 +12,7 @@ import { UserContext } from "../context/userContext";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  const [, , toggle] = useContext(ModalContext);
+  const [, , , , toggle] = useContext(ModalContext);
   const [user, setUser] = useContext(UserContext);
 
   return (
@@ -81,12 +81,12 @@ export default function Navbar() {
             <div className="row mb-5">
               <div className="col">
                 <Link to="/">
-                  <img src={imageLogo2} alt="logoJourney" />
+                  <img src={imageLogo} alt="logoJourney" />
                 </Link>
               </div>
               <div className="col d-flex justify-content-end align-items-center">
                 <Button
-                  className="fw-bold mx-3 btn-white"
+                  className="shadow fw-bold mx-3 btn-white"
                   variant=""
                   type="submit"
                   size="sm"
@@ -95,7 +95,7 @@ export default function Navbar() {
                   login
                 </Button>
                 <Button
-                  className="fw-bold btn-blue"
+                  className="shadow fw-bold btn-blue"
                   variant=""
                   type="submit"
                   size="sm"
@@ -106,19 +106,28 @@ export default function Navbar() {
               </div>
             </div>
             <p
-              className="mb-0 fw-bold text-white"
+              className="shadow-lg mb-0 fw-bold text-white"
               style={{ fontSize: "3.5rem" }}
             >
               The Journey
             </p>
-            <p className="fw-bold text-white" style={{ fontSize: "3.5rem" }}>
+            <p
+              className="shadow-lg fw-bold text-white"
+              style={{ fontSize: "3.5rem" }}
+            >
               you ever dreamed of.
             </p>
-            <p className="mb-0 text-white" style={{ fontSize: "1.5rem" }}>
+            <p
+              className="shadow-lg neonText mb-0 text-white"
+              style={{ fontSize: "1.5rem" }}
+            >
               We made a tool so you can easily keep & share your travel
               memories.
             </p>
-            <p className=" text-white" style={{ fontSize: "1.5rem" }}>
+            <p
+              className="shadow-lg neonText text-white"
+              style={{ fontSize: "1.5rem" }}
+            >
               But there is a lot more
             </p>
           </div>

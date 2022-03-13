@@ -9,12 +9,14 @@ import {
   Profile,
   DetailJourney,
   NewJourney,
+  EditJourney,
 } from "./pages/Index";
 import ModalRegister from "./components/ModalRegister";
 import ModalLogin from "./components/ModalLogin";
 import { useContext, useEffect } from "react";
 import { UserContext } from "./context/userContext";
 import UserRoute from "./components/UserRoute";
+import ModalEditProfile from "./components/ModalEditProfile";
 
 export default function App() {
   const [user, setUser] = useContext(UserContext);
@@ -74,7 +76,17 @@ export default function App() {
             </UserRoute>
           }
         />
+        <Route
+          exact
+          path="/journey/:journeyId"
+          element={
+            <UserRoute>
+              <EditJourney />
+            </UserRoute>
+          }
+        />
       </Routes>
+      <ModalEditProfile />
       <ModalRegister />
       <ModalLogin />
     </Router>

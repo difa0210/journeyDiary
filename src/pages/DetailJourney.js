@@ -23,7 +23,7 @@ export default function DetailJourney() {
 
   return (
     <div className="container px-0 py-5" style={{ backgroundColor: "#ececec" }}>
-      <div className="container d-flex mx-auto px-5 mb-2 fw-bold justify-content-between align-items-center">
+      <div className="containerc animate-character d-flex mx-auto px-5 mb-2 fw-bold justify-content-between align-items-center">
         <p className="mb-0" style={{ fontSize: "2.5rem" }}>
           {getJourney.title}
         </p>
@@ -32,7 +32,10 @@ export default function DetailJourney() {
         </p>
       </div>
       <div className="container row mx-auto px-5 mb-4">
-        <p className="mb-0 p-0 opacity-50" style={{ fontSize: "1.2rem" }}>
+        <p
+          className="mb-0 p-0"
+          style={{ color: "#3B97D3", fontSize: "1.2rem" }}
+        >
           {new Date(getJourney.updatedAt).toDateString()}
         </p>
       </div>

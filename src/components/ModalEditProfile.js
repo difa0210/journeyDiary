@@ -3,8 +3,8 @@ import { Button, Form, Modal, Alert } from "react-bootstrap";
 import { API } from "../config/api";
 import { ModalContext } from "../context/ModalContext";
 
-export default function ModalRegister() {
-  const [, isOpen, , , toggle] = useContext(ModalContext);
+export default function ModalEditProfile() {
+  const [, , isOpen, userId, toggle] = useContext(ModalContext);
   const [message, setMessage] = useState(null);
   const [form, setForm] = useState({
     name: "",
@@ -52,7 +52,11 @@ export default function ModalRegister() {
 
       console.log(form);
 
-      const response = await API.post("/register", formData, config);
+      const response = await API.patch(
+        `/edit-profile/${userId}`,
+        formData,
+        config
+      );
 
       setForm({
         name: "",
@@ -62,14 +66,28 @@ export default function ModalRegister() {
         image: "",
       });
       console.log(response.data);
+
+      if (response.data.status === "success") {
+        const alert = (
+          <Alert variant="success" className="py-1 fw-bold">
+            Edit Profile Success
+          </Alert>
+        );
+        setMessage(alert);
+      }
     } catch (error) {
-      setMessage(error.response);
+      const alert = (
+        <Alert variant="danger" className="py-1 fw-bold">
+          Edit Profile Fail!
+        </Alert>
+      );
+      setMessage(alert);
       console.log(error);
     }
   };
 
   return (
-    <Modal show={isOpen} onHide={() => toggle("Register")} centered>
+    <Modal show={isOpen} onHide={() => toggle("EditProfile")} centered>
       <Modal.Body>
         <Form
           onSubmit={handleSubmit}
@@ -78,7 +96,7 @@ export default function ModalRegister() {
             color: "#0e67ec",
           }}
         >
-          <Form.Label className="fs-2 fw-bold mb-4">Register</Form.Label>
+          <Form.Label className="fs-2 fw-bold mb-4">Edit Profile</Form.Label>
           {message && message}
           <Form.Group className="mb-4" controlId="formBasicText">
             <Form.Control
@@ -163,7 +181,7 @@ export default function ModalRegister() {
               borderRadius: "0.3rem",
             }}
             onClick={(e) => {
-              handleSubmit(e, toggle("Register"), toggle("Login"));
+              handleSubmit(e, toggle("EditProfile"));
             }}
           >
             Register

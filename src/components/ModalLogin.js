@@ -4,7 +4,7 @@ import { API } from "../config/api";
 import { ModalContext } from "../context/ModalContext";
 
 export default function ModalLogin() {
-  const [isOpen, , toggle] = useContext(ModalContext);
+  const [isOpen, , , , toggle] = useContext(ModalContext);
 
   const [message, setMessage] = useState(null);
   const [form, setForm] = useState({
@@ -42,7 +42,7 @@ export default function ModalLogin() {
   };
 
   return (
-    <Modal show={isOpen} onHide={() => toggle("Login")} centered>
+    <Modal className="" show={isOpen} onHide={() => toggle("Login")} centered>
       <Modal.Body>
         {message && <div>{message}</div>}
         <Form

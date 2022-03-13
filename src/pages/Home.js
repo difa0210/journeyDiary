@@ -2,13 +2,14 @@ import { useEffect, useState, useContext } from "react";
 import { Button, InputGroup, FormControl, Card, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { API, setAuthToken } from "../config/api";
-import bookmarkIcon from "../images/Vector.svg";
+import Bookmark from "../images/bookmark.png";
+import Bookmarked from "../images/bookmarked.png";
 import { ModalContext } from "../context/ModalContext";
 import { UserContext } from "../context/userContext";
 
 export default function Home() {
   const navigate = useNavigate();
-  const [, , toggle] = useContext(ModalContext);
+  const [, , , , toggle] = useContext(ModalContext);
   const [user] = useContext(UserContext);
   console.log(user);
   const [allJourney, setAllJourney] = useState([]);
@@ -80,63 +81,41 @@ export default function Home() {
 
       const response = await API.post(`/bookmark`, body, config);
 
-      if (response.data.message === "success") {
-        const alert = (
-          <Alert
-            variant={value ? "success" : "danger"}
-            className=" py-1 fw-bold"
-          >
-            {value ? "Add Bookmark Success" : "Delete Bookmark success"}
-          </Alert>
-        );
-        setMessage(alert);
-      }
+      // if (response.data.message === "success") {
+      //   const alert = (
+      //     <Alert
+      //       variant={value ? "success" : "danger"}
+      //       className=" py-1 fw-bold"
+      //     >
+      //       {value ? "Add Bookmark Success" : "Delete Bookmark success"}
+      //     </Alert>
+      //   );
+      //   setMessage(alert);
+      //   setTimeout(() => {
+      //     setMessage();
+      //   }, 3000);
+      // }
     } catch (error) {
       console.log(error.response);
     }
   };
 
-  const [inputText, setInputText] = useState("");
-  const [filterResults, setFilterResults] = useState([]);
-
-  // const inputHandler = (searchValue) => {
-  //   setInputText(searchValue);
-  //   if (inputText !== "") {
-  //     const filterData = allJourney
-  //       .map((x) => x.title)
-  //       .filter((item) => {
-  //         return Object.values(item)
-  //           .join("")
-  //           .toLowerCase()
-  //           .includes(inputText.toLowerCase());
-  //       });
-  //     setFilterResults(filterData);
-  //   } else {
-  //     setFilterResults(allJourney);
-  //   }
-  // };
-
-  // let dataSearch = allJourney.data.filter((item) => {
-  //   return Object.keys(
-  //     item.some((key) =>
-  //       item[key]
-  //         .toString()
-  //         .toLowerCase()
-  //         .includes(journey.toString().toLowerCase())
-  //     )
-  //   );
-  // });
-
   return (
-    <div className="container py-5" style={{ backgroundColor: "#ececec" }}>
+    <div
+      className="container py-5"
+      style={{ backgroundColor: "#ececec", height: "100%" }}
+    >
       <div className="container row text-black mx-auto mb-5 fw-bold">
-        <p className="" style={{ fontSize: "2.5rem" }}>
+        <p className="animate-character" style={{ fontSize: "2.5rem" }}>
           Journey
         </p>
       </div>
-      <div className="container row mx-auto mb-3" style={{ width: "68rem" }}>
-        <form onSubmit={(e) => search(e, searchQuery, user?.id)}>
-          <InputGroup className="mb-5">
+      <div className="container row mx-auto" style={{ width: "68rem" }}>
+        <form
+          className="mb-5"
+          onSubmit={(e) => search(e, searchQuery, user?.id)}
+        >
+          <InputGroup>
             <FormControl
               className="shadow"
               style={{ background: "white", borderWidth: 0 }}
@@ -185,7 +164,7 @@ export default function Home() {
                 >
                   {user && (
                     <span
-                      className="shadow position-absolute top-0 end-0 p-2"
+                      className="shadow position-absolute top-0 end-0 p-1"
                       style={{
                         cursor: "pointer",
                         background: "white",
@@ -195,15 +174,17 @@ export default function Home() {
                     >
                       {item.isBookmark ? (
                         <img
-                          style={{ backgroundColor: "blue" }}
-                          src={bookmarkIcon}
-                          alt="bm"
+                          style={{
+                            height: "1.5rem",
+                          }}
+                          src={Bookmarked}
                         />
                       ) : (
                         <img
-                          style={{ backgroundColor: "white" }}
-                          src={bookmarkIcon}
-                          alt="bm"
+                          style={{
+                            height: "1.5rem",
+                          }}
+                          src={Bookmark}
                         />
                       )}
                     </span>

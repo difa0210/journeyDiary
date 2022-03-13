@@ -3,8 +3,10 @@ import { Button, Form, Image } from "react-bootstrap";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { API } from "../config/api";
+import { useParams } from "react-router-dom";
 
 export default function NewJourney() {
+  const { journeyId } = useParams();
   const [preview, setPreview] = useState(null);
   const [form, setForm] = useState({
     title: "",
@@ -53,7 +55,11 @@ export default function NewJourney() {
 
       console.log(form);
 
-      const response = await API.post("/journey", formData, config);
+      const response = await API.patch(
+        `/journey/${journeyId}`,
+        formData,
+        config
+      );
       setForm({
         title: "",
         description: "",
@@ -68,12 +74,12 @@ export default function NewJourney() {
 
   return (
     <div
-      className="container py-5"
+      className="container pt-5"
       style={{ backgroundColor: "#ececec", height: "100vh" }}
     >
       <div className="container row mx-auto mb-5 fw-bold">
         <p className="animate-character" style={{ fontSize: "2.5rem" }}>
-          New Journey
+          Edit Journey
         </p>
       </div>
       <div className="container row mx-auto">

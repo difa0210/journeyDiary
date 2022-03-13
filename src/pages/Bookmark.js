@@ -36,11 +36,11 @@ export default function Bookmark() {
 
   return (
     <div
-      className="container px-0 py-5"
+      className="container py-5"
       style={{ backgroundColor: "#ececec", height: "100vh" }}
     >
       <div className="container row mx-auto mb-5 fw-bold">
-        <p className="" style={{ fontSize: "2.5rem" }}>
+        <p className="animate-character" style={{ fontSize: "2.5rem" }}>
           My Bookmark
         </p>
       </div>
@@ -65,18 +65,14 @@ export default function Bookmark() {
                   onClick={(e) => handleDelete(e, item.id)}
                   style={{
                     cursor: "pointer",
-                    opacity: "60%",
+                    opacity: "50%",
                     background: "white",
                     borderRadius: "0.1rem",
                     margin: "0.5rem",
                   }}
-                  className="shadow position-absolute top-0 end-0 p-2"
+                  className="shadow position-absolute top-0 end-0 py-2 px-1"
                 >
-                  <img
-                    style={{ backgroundColor: "blue" }}
-                    src={bookmarkIcon}
-                    alt="bm"
-                  />
+                  <img src="https://img.icons8.com/ios-filled/30/000000/bookmark-ribbon.png" />
                 </span>
 
                 <Card.Body>

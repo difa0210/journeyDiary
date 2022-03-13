@@ -1,11 +1,15 @@
-import { Card, Image } from "react-bootstrap";
+import { Card, Image, Button } from "react-bootstrap";
 import { API, setAuthToken } from "../config/api";
 import imageProfile from "../images/profile2.png";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import trash from "../images/trash.png";
+import edit from "../images/edit.png";
+import { useNavigate, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { ModalContext } from "../context/ModalContext";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const [, , , , toggle] = useContext(ModalContext);
   const [getJourney, setGetJourney] = useState();
   const [getProfile, setGetProfile] = useState();
 
@@ -37,9 +41,9 @@ export default function Profile() {
   };
 
   return (
-    <div className="container px-0 py-5" style={{ backgroundColor: "#ececec" }}>
-      <div className="container row mx-auto mb-4 fw-bold">
-        <p className="" style={{ fontSize: "2.5rem" }}>
+    <div className="container py-5" style={{ backgroundColor: "#ececec" }}>
+      <div className="container row mx-auto mb-5 fw-bold">
+        <p className="animate-character" style={{ fontSize: "2.5rem" }}>
           My Profile
         </p>
       </div>
@@ -47,6 +51,17 @@ export default function Profile() {
         <div className="mx-auto mb-3 d-flex justify-content-center align-items-center">
           <Image src={imageProfile} />
         </div>
+        {/* <div className="col d-flex justify-content-end align-items-center">
+          <Button
+            className="shadow fw-bold btn-blue"
+            variant=""
+            type="submit"
+            size="sm"
+            onClick={() => toggle("EditProfile")}
+          >
+            Edit Profile
+          </Button>
+        </div> */}
         <div className="mx-auto mb-5 d-flex-row text-center fs-2">
           {getProfile && getProfile.name}
           <p className="mt-1" style={{ fontSize: "1.2rem" }}>
@@ -70,20 +85,37 @@ export default function Profile() {
                   variant="top"
                   src={`http://localhost:5000/uploads/${item.image}`}
                 />
-                <span
+                {/* <span
                   onClick={(e) => handleDelete(e, item.id)}
                   style={{
                     cursor: "pointer",
-                    background: "rgb(194, 8, 8)",
-                    borderRadius: "0.3rem",
-                    color: "white",
+                    background: "white",
+                    borderRadius: "0.2rem",
                     margin: "0.5rem",
-                    fontSize: "0.7rem",
                   }}
-                  className="fw-bold shadow position-absolute top-55 end-0 px-2 py-1"
+                  className="fw-bold shadow-lg position-absolute top-55 end-0 px-2 py-1"
                 >
-                  Delete
-                </span>
+                  <img src={trash} alt="" />
+                </span> */}
+
+                {/* <span
+                  onClick={() => navigate(`/journey/${item.id}`)}
+                  style={{
+                    cursor: "pointer",
+                    background: "white",
+                    borderRadius: "0.2rem",
+                    margin: "0.5rem",
+                  }}
+                  className="fw-bold shadow-lg position-absolute top-55 end-0 px-2 py-1 me-5"
+                >
+                  <img
+                    style={{
+                      width: "1.2rem",
+                    }}
+                    src={edit}
+                    alt=""
+                  />
+                </span> */}
                 <Card.Body>
                   <Card.Title className="text-truncate">
                     {item.title}

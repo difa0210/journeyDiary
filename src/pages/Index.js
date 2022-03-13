@@ -4,6 +4,7 @@ import Bookmark from "./Bookmark";
 import Profile from "./Profile";
 import DetailJourney from "./DetailJourney";
 import NewJourney from "./NewJourney";
+import EditJourney from "./EditJourney";
 import ModalRegister from "../components/ModalRegister";
 import ModalLogin from "../components/ModalLogin";
 
@@ -14,6 +15,7 @@ export {
   Profile,
   DetailJourney,
   NewJourney,
+  EditJourney,
   ModalRegister,
   ModalLogin,
 };
