@@ -35,8 +35,7 @@ exports.register = async (req, res) => {
       image: req.file.filename,
     });
 
-    const SECRET_KEY = "Difa Tampan";
-    const token = jwt.sign({ id: User.id }, SECRET_KEY);
+    const token = jwt.sign({ id: User.id }, process.env.SECRET_KEY);
 
     res.status(201).send({
       message: "register success",
@@ -134,6 +133,64 @@ exports.checkAuth = async (req, res) => {
         email: data.email,
         phone: data.phone,
         address: data.address,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      status: "failed",
+      message: "Server Error",
+    });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  const schema = joi.object({
+    name: joi.string().min(3),
+    email: joi.string().email().min(5),
+    password: joi.string().min(3),
+    phone: joi.number().min(9),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error)
+    return res.status(400).send({
+      error,
+    });
+
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const file = req.file.filename;
+    const data = { body, file };
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    const newUser = await User.update(
+      {
+        ...data,
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword,
+        phone: req.body.phone,
+        address: req.body.address,
+        image: req.file.filename,
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+
+    const SECRET_KEY = "Difa Tampan";
+    const token = jwt.sign({ id: User.id }, SECRET_KEY);
+
+    res.status(201).send({
+      message: "update success",
+      data: {
+        newUser,
+        token,
       },
     });
   } catch (error) {
