@@ -83,7 +83,7 @@ export default function Profile() {
                     navigate(`/detailJourney/${item.id}`);
                   }}
                   variant="top"
-                  src={`http://localhost:5000/uploads/${item.image}`}
+                  src={item.image}
                 />
                 {/* <span
                   onClick={(e) => handleDelete(e, item.id)}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { API, setAuthToken } from "../config/api";
-import bookmarkIcon from "../images/Vector.svg";
+import Bookmarked from "../images/bookmarked.png";
 
 export default function Bookmark() {
   const [getBookmarks, setGetBookmarks] = useState();
@@ -65,14 +65,18 @@ export default function Bookmark() {
                   onClick={(e) => handleDelete(e, item.id)}
                   style={{
                     cursor: "pointer",
-                    opacity: "50%",
                     background: "white",
                     borderRadius: "0.1rem",
                     margin: "0.5rem",
                   }}
                   className="shadow position-absolute top-0 end-0 py-2 px-1"
                 >
-                  <img src="https://img.icons8.com/ios-filled/30/000000/bookmark-ribbon.png" />
+                  <img
+                    style={{
+                      height: "1.5rem",
+                    }}
+                    src={Bookmarked}
+                  />
                 </span>
 
                 <Card.Body>

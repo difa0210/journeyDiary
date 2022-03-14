@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Button, Form, Image } from "react-bootstrap";
+import { Alert, Button, Form, Image } from "react-bootstrap";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { API } from "../config/api";
 
 export default function NewJourney() {
   const [preview, setPreview] = useState(null);
+  const [message, setMessage] = useState(null);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -61,7 +62,21 @@ export default function NewJourney() {
       });
       setPreview(null);
       console.log(response.data);
+      if (response.data.message === "success") {
+        const alert = (
+          <Alert variant="success" className="px-0 py-1 fw-bold">
+            Add Journey Success!
+          </Alert>
+        );
+        setMessage(alert);
+      }
     } catch (error) {
+      const alert = (
+        <Alert variant="danger" className="p-0 m-0 fw-bold">
+          Add Journey Failed!
+        </Alert>
+      );
+      setMessage(alert);
       console.log(error.response);
     }
   };
@@ -76,6 +91,7 @@ export default function NewJourney() {
           New Journey
         </p>
       </div>
+      {message && <div className="container row mx-auto my-4">{message}</div>}
       <div className="container row mx-auto">
         <Form onSubmit={handleSubmit} className="">
           <Form.Label className="fs-5 fw-bold ">Title</Form.Label>
@@ -91,7 +107,7 @@ export default function NewJourney() {
           </Form.Group>
           <Form.Label className="fs-5 fw-bold ">Image</Form.Label>
           <Form.Group
-            className="mb-2 p-3"
+            className="mb-3 p-3"
             style={{
               height: "13rem",
               borderRadius: "0.5rem",
@@ -128,12 +144,8 @@ export default function NewJourney() {
             // }}
             onChange={handleChangeEditor}
           />
-          <div
-            className="my-4"
-            dangerouslySetInnerHTML={{ __html: form.description }}
-          />
           <Button
-            className="fw-bold btn-blue"
+            className="fw-bold btn-blue mt-3"
             style={{ fontSize: "0.9rem" }}
             variant=""
             type="submit"

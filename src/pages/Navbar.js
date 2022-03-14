@@ -22,7 +22,7 @@ export default function Navbar() {
           <div className="text-start px-5 py-2">
             <div className="row d-flex align-items-center">
               <div className="col">
-                <Link to="/home">
+                <Link to="/journey">
                   <img src={imageLogo2} alt="logoJourney" />
                 </Link>
               </div>
@@ -33,15 +33,15 @@ export default function Navbar() {
                       <Image src={profile} />
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item
-                        href="/my-journeys"
-                        className="mb-3 fw-bold"
-                      >
+                      <Dropdown.Item href="/profile" className="mb-3 fw-bold">
                         <Image src={icon3} className="mx-3" />
                         Profile
                       </Dropdown.Item>
 
-                      <Dropdown.Item href="/journey" className="mb-3 fw-bold">
+                      <Dropdown.Item
+                        href="/newjourney"
+                        className="mb-3 fw-bold"
+                      >
                         <Image src={icon2} className="mx-3" />
                         New Journey
                       </Dropdown.Item>
@@ -118,7 +118,7 @@ export default function Navbar() {
               you ever dreamed of.
             </p>
             <p
-              className="shadow-lg neonText mb-0 text-white"
+              className="shadow-lg mb-0 text-white"
               style={{ fontSize: "1.5rem" }}
             >
               We made a tool so you can easily keep & share your travel
@@ -128,7 +128,7 @@ export default function Navbar() {
               className="shadow-lg neonText text-white"
               style={{ fontSize: "1.5rem" }}
             >
-              But there is a lot more
+              But there is a lot more.
             </p>
           </div>
         </>

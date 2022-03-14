@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { API } from "../config/api";
 import { ModalContext } from "../context/ModalContext";
 
 export default function ModalLogin() {
+  const navigate = useNavigate();
   const [isOpen, , , , toggle] = useContext(ModalContext);
-
   const [message, setMessage] = useState(null);
   const [form, setForm] = useState({
     email: "",
@@ -33,18 +34,27 @@ export default function ModalLogin() {
       const body = JSON.stringify(form);
 
       const response = await API.post("/login", body, config);
-      window.location.reload();
+
       localStorage.setItem("token", response.data.token);
+
       console.log(response);
+      if (response.data.message === "login success") {
+        navigate("/journey");
+      }
+      window.location.reload();
     } catch (error) {
-      setMessage(error.response);
+      const alert = (
+        <Alert variant="danger" className="py-1 fw-bold">
+          Email or Password not match
+        </Alert>
+      );
+      setMessage(alert);
     }
   };
 
   return (
     <Modal className="" show={isOpen} onHide={() => toggle("Login")} centered>
       <Modal.Body>
-        {message && <div>{message}</div>}
         <Form
           onSubmit={handleSubmit}
           className="p-5"
@@ -52,6 +62,7 @@ export default function ModalLogin() {
             color: "#0e67ec",
           }}
         >
+          {message && <div>{message}</div>}
           <Form.Label className="fs-2 fw-bold mb-5">Login</Form.Label>
           <Form.Group
             className="mb-4"
@@ -102,6 +113,9 @@ export default function ModalLogin() {
             type="submit"
             style={{
               borderRadius: "0.3rem",
+            }}
+            onClick={() => {
+              navigate("/journey");
             }}
           >
             Login

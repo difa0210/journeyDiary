@@ -17,6 +17,7 @@ import { useContext, useEffect } from "react";
 import { UserContext } from "./context/userContext";
 import UserRoute from "./components/UserRoute";
 import ModalEditProfile from "./components/ModalEditProfile";
+import Journey from "./pages/Journey";
 
 export default function App() {
   const [user, setUser] = useContext(UserContext);
@@ -42,7 +43,15 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route exact path="/" element={<Home />} />
-        <Route exact path="/home" element={<Home />} />
+        <Route
+          exact
+          path="/journey"
+          element={
+            <UserRoute>
+              <Journey />
+            </UserRoute>
+          }
+        />
         <Route
           exact
           path="/bookmarks"
@@ -54,7 +63,7 @@ export default function App() {
         />
         <Route
           exact
-          path="/my-journeys"
+          path="/profile"
           element={
             <UserRoute>
               <Profile />
@@ -69,7 +78,7 @@ export default function App() {
         />
         <Route
           exact
-          path="/journey"
+          path="/newjourney"
           element={
             <UserRoute>
               <NewJourney />
@@ -78,7 +87,7 @@ export default function App() {
         />
         <Route
           exact
-          path="/journey/:journeyId"
+          path="/editjourney/:journeyId"
           element={
             <UserRoute>
               <EditJourney />

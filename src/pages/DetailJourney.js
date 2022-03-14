@@ -1,4 +1,3 @@
-import { Image } from "react-bootstrap";
 import { API } from "../config/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -41,10 +40,10 @@ export default function DetailJourney() {
       </div>
       <div className="container">
         <div className="container row mx-auto mb-5 d-flex justify-content-center align-items-center">
-          <Image src={`http://localhost:5000/uploads/${getJourney.image}`} />
+          <img src={getJourney.image} />
         </div>
         <div
-          className="mx-auto mb-5 d-flex-row text-center"
+          className="mb-5 d-flex-row text-center"
           dangerouslySetInnerHTML={{ __html: getJourney.description }}
         ></div>
       </div>

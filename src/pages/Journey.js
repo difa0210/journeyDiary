@@ -7,7 +7,7 @@ import Bookmarked from "../images/bookmarked.png";
 import { ModalContext } from "../context/ModalContext";
 import { UserContext } from "../context/userContext";
 
-export default function Home() {
+export default function Journey() {
   const navigate = useNavigate();
   const [, , , , toggle] = useContext(ModalContext);
   const [user] = useContext(UserContext);

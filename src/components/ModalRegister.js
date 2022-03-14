@@ -63,7 +63,12 @@ export default function ModalRegister() {
       });
       console.log(response.data);
     } catch (error) {
-      setMessage(error.response);
+      const alert = (
+        <Alert variant="danger" className="py-1 fw-bold">
+          Please input form!
+        </Alert>
+      );
+      setMessage(alert);
       console.log(error);
     }
   };
@@ -162,8 +167,13 @@ export default function ModalRegister() {
             style={{
               borderRadius: "0.3rem",
             }}
-            onClick={(e) => {
-              handleSubmit(e, toggle("Register"), toggle("Login"));
+            onClick={() => {
+              if (message.alert) {
+                toggle("Register");
+              } else {
+                toggle("Login");
+                toggle("Register");
+              }
             }}
           >
             Register

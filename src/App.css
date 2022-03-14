@@ -86,29 +86,6 @@ span:hover {
   border-color: white !important;
 }
 
-.neonText {
-  animation: flicker 2s infinite alternate;
-}
-
-@keyframes flicker {
-  0%,
-  18%,
-  22%,
-  25%,
-  53%,
-  57%,
-  100% {
-    text-shadow: 0 0 4px #fff, 0 0 20px #0e67ec, 0 0 40px #ff1361,
-      0 0 80px #231557;
-  }
-
-  20%,
-  24%,
-  55% {
-    text-shadow: none;
-  }
-}
-
 .animate-character {
   background-image: linear-gradient(
     -225deg,
@@ -124,7 +101,7 @@ span:hover {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: textclip 2s linear infinite;
+  animation: textclip 3s linear infinite;
   /* display: inline-block; */
 }
 
