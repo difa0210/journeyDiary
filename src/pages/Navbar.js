@@ -1,4 +1,4 @@
-import { Button, InputGroup, Dropdown, Image } from "react-bootstrap";
+import { InputGroup, Dropdown, Image } from "react-bootstrap";
 import imageLogo from "../images/logo-journey.png";
 import imageLogo2 from "../images/Icon.png";
 import icon1 from "../images/icon1.png";
@@ -12,7 +12,7 @@ import { UserContext } from "../context/userContext";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  const [, , , , toggle] = useContext(ModalContext);
+  const [, , toggle] = useContext(ModalContext);
   const [user, setUser] = useContext(UserContext);
 
   return (
@@ -85,16 +85,16 @@ export default function Navbar() {
                 </Link>
               </div>
               <div className="col d-flex justify-content-end align-items-center">
-                <Button
+                <button
                   className="shadow fw-bold mx-3 btn-white"
                   variant=""
                   type="submit"
                   size="sm"
                   onClick={() => toggle("Login")}
                 >
-                  login
-                </Button>
-                <Button
+                  Login
+                </button>
+                <button
                   className="shadow fw-bold btn-blue"
                   variant=""
                   type="submit"
@@ -102,7 +102,7 @@ export default function Navbar() {
                   onClick={() => toggle("Register")}
                 >
                   Register
-                </Button>
+                </button>
               </div>
             </div>
             <p

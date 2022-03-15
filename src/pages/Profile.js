@@ -1,25 +1,23 @@
-import { Card, Image, Button } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { API, setAuthToken } from "../config/api";
 import imageProfile from "../images/profile2.png";
 import trash from "../images/trash.png";
 import edit from "../images/edit.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { ModalContext } from "../context/ModalContext";
+import { UserContext } from "../context/userContext";
 
 export default function Profile() {
+  const [user] = useContext(UserContext);
   const navigate = useNavigate();
-  const [, , , , toggle] = useContext(ModalContext);
   const [getJourney, setGetJourney] = useState();
-  const [getProfile, setGetProfile] = useState();
 
   const myJourney = async () => {
     try {
       setAuthToken(localStorage.getItem("token"));
       const response = await API.get("my-journeys");
       setGetJourney(response.data.data.allprofile);
-      setGetProfile(response.data.data.allprofile[0]);
-      console.log(response.data.data.allprofile[0]);
+      console.log(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -41,31 +39,42 @@ export default function Profile() {
   };
 
   return (
-    <div className="container py-5" style={{ backgroundColor: "#ececec" }}>
-      <div className="container row mx-auto mb-5 fw-bold">
-        <p className="animate-character" style={{ fontSize: "2.5rem" }}>
+    <div
+      className="container py-5"
+      style={{ backgroundColor: "#ececec", height: "100vh" }}
+    >
+      <div className="container d-flex mx-auto px-5 mb-2 fw-bold justify-content-between align-items-center">
+        <p className="" style={{ fontSize: "2.5rem" }}>
           My Profile
         </p>
+
+        {/* <button
+          className="shadow fw-bold btn-blue rounded"
+          style={{ width: "8.5rem" }}
+          variant=""
+          type="submit"
+          size="sm"
+          onClick={() => {
+            navigate(`/editprofile/${user.id}`);
+          }}
+        >
+          Edit Profile
+        </button> */}
       </div>
+
       <div className="">
         <div className="mx-auto mb-3 d-flex justify-content-center align-items-center">
-          <Image src={imageProfile} />
+          <img
+            style={{ width: "13rem" }}
+            src={user && user.image}
+            alt="profile"
+          />
         </div>
-        {/* <div className="col d-flex justify-content-end align-items-center">
-          <Button
-            className="shadow fw-bold btn-blue"
-            variant=""
-            type="submit"
-            size="sm"
-            onClick={() => toggle("EditProfile")}
-          >
-            Edit Profile
-          </Button>
-        </div> */}
+        <div className="col d-flex justify-content-center align-items-center"></div>
         <div className="mx-auto mb-5 d-flex-row text-center fs-2">
-          {getProfile && getProfile.name}
+          {user && user.name}
           <p className="mt-1" style={{ fontSize: "1.2rem" }}>
-            {getProfile && getProfile.email}
+            {user && user.email}
           </p>
         </div>
       </div>
@@ -80,12 +89,12 @@ export default function Profile() {
                 <Card.Img
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    navigate(`/detailJourney/${item.id}`);
+                    navigate(`/detailjourney/${item.id}`);
                   }}
                   variant="top"
                   src={item.image}
                 />
-                {/* <span
+                <span
                   onClick={(e) => handleDelete(e, item.id)}
                   style={{
                     cursor: "pointer",
@@ -96,10 +105,10 @@ export default function Profile() {
                   className="fw-bold shadow-lg position-absolute top-55 end-0 px-2 py-1"
                 >
                   <img src={trash} alt="" />
-                </span> */}
+                </span>
 
                 {/* <span
-                  onClick={() => navigate(`/journey/${item.id}`)}
+                  onClick={() => navigate(`/editjourney/${item.id}`)}
                   style={{
                     cursor: "pointer",
                     background: "white",

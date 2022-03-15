@@ -1,15 +1,13 @@
 import { useEffect, useState, useContext } from "react";
-import { Button, InputGroup, FormControl, Card, Alert } from "react-bootstrap";
+import { InputGroup, FormControl, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { API, setAuthToken } from "../config/api";
+import { API } from "../config/api";
 import Bookmark from "../images/bookmark.png";
 import Bookmarked from "../images/bookmarked.png";
-import { ModalContext } from "../context/ModalContext";
 import { UserContext } from "../context/userContext";
 
 export default function Journey() {
   const navigate = useNavigate();
-  const [, , , , toggle] = useContext(ModalContext);
   const [user] = useContext(UserContext);
   console.log(user);
   const [allJourney, setAllJourney] = useState([]);
@@ -86,12 +84,9 @@ export default function Journey() {
   };
 
   return (
-    <div
-      className="container py-5"
-      style={{ backgroundColor: "#ececec", height: "100%" }}
-    >
+    <div className="container py-5" style={{ backgroundColor: "#ececec" }}>
       <div className="container row text-black mx-auto mb-5 fw-bold">
-        <p className="animate-character" style={{ fontSize: "2.5rem" }}>
+        <p className="" style={{ fontSize: "2.5rem" }}>
           Journey
         </p>
       </div>
@@ -108,7 +103,7 @@ export default function Journey() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
 
-            <Button
+            <button
               className="btn-blue shadow fw-bold"
               variant=""
               type="submit"
@@ -116,7 +111,7 @@ export default function Journey() {
               onClick={(e) => search(e, searchQuery, user?.id)}
             >
               Search
-            </Button>
+            </button>
           </InputGroup>
         </form>
       </div>
@@ -131,7 +126,7 @@ export default function Journey() {
                 <Card.Img
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    navigate(`/detailJourney/${item.id}`);
+                    navigate(`/detailjourney/${item.id}`);
                   }}
                   variant="top"
                   src={`http://localhost:5000/uploads/${item.image}`}
@@ -140,8 +135,6 @@ export default function Journey() {
                   onClick={(e) => {
                     if (user) {
                       handleSubmit(e, index, item.id, !item.isBookmark);
-                    } else {
-                      toggle("Login");
                     }
                   }}
                 >

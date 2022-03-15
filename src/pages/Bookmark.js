@@ -40,7 +40,7 @@ export default function Bookmark() {
       style={{ backgroundColor: "#ececec", height: "100vh" }}
     >
       <div className="container row mx-auto mb-5 fw-bold">
-        <p className="animate-character" style={{ fontSize: "2.5rem" }}>
+        <p className="" style={{ fontSize: "2.5rem" }}>
           My Bookmark
         </p>
       </div>
@@ -56,7 +56,7 @@ export default function Bookmark() {
                 <Card.Img
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    navigate(`/detailJourney/${item.journeyId}`);
+                    navigate(`/detailjourney/${item.journeyId}`);
                   }}
                   variant="top"
                   src={`http://localhost:5000/uploads/${item.Journey.image}`}

@@ -4,7 +4,7 @@ import { API } from "../config/api";
 import { ModalContext } from "../context/ModalContext";
 
 export default function ModalRegister() {
-  const [, isOpen, , , toggle] = useContext(ModalContext);
+  const [, isOpen, toggle] = useContext(ModalContext);
   const [message, setMessage] = useState(null);
   const [form, setForm] = useState({
     name: "",
@@ -171,8 +171,8 @@ export default function ModalRegister() {
               if (message.alert) {
                 toggle("Register");
               } else {
-                toggle("Login");
                 toggle("Register");
+                toggle("Login");
               }
             }}
           >

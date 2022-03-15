@@ -6,7 +6,7 @@ import { ModalContext } from "../context/ModalContext";
 
 export default function ModalLogin() {
   const navigate = useNavigate();
-  const [isOpen, , , , toggle] = useContext(ModalContext);
+  const [isOpen, , toggle] = useContext(ModalContext);
   const [message, setMessage] = useState(null);
   const [form, setForm] = useState({
     email: "",

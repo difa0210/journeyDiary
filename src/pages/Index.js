@@ -5,6 +5,7 @@ import Profile from "./Profile";
 import DetailJourney from "./DetailJourney";
 import NewJourney from "./NewJourney";
 import EditJourney from "./EditJourney";
+import EditProfile from "./EditProfile";
 import ModalRegister from "../components/ModalRegister";
 import ModalLogin from "../components/ModalLogin";
 
@@ -13,6 +14,7 @@ export {
   Navbar,
   Bookmark,
   Profile,
+  EditProfile,
   DetailJourney,
   NewJourney,
   EditJourney,

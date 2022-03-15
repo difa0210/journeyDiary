@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Button, Form, Image } from "react-bootstrap";
+import { Alert, Form } from "react-bootstrap";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { API } from "../config/api";
@@ -87,7 +87,7 @@ export default function NewJourney() {
       style={{ backgroundColor: "#ececec", height: "100vh" }}
     >
       <div className="container row mx-auto mb-5 fw-bold">
-        <p className="animate-character" style={{ fontSize: "2.5rem" }}>
+        <p className="" style={{ fontSize: "2.5rem" }}>
           New Journey
         </p>
       </div>
@@ -116,7 +116,7 @@ export default function NewJourney() {
             controlId="formBasic"
           >
             {preview ? (
-              <Image
+              <img
                 className="shadow-lg"
                 style={{ borderRadius: "0.5rem" }}
                 src={preview}
@@ -144,7 +144,7 @@ export default function NewJourney() {
             // }}
             onChange={handleChangeEditor}
           />
-          <Button
+          <button
             className="fw-bold btn-blue mt-3"
             style={{ fontSize: "0.9rem" }}
             variant=""
@@ -152,7 +152,7 @@ export default function NewJourney() {
             onClick={handleSubmit}
           >
             Submit
-          </Button>
+          </button>
         </Form>
       </div>
     </div>

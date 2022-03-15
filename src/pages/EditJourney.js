@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Button, Form, Image } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { API } from "../config/api";
 import { useParams } from "react-router-dom";
 
-export default function NewJourney() {
+export default function EditJourney() {
   const { journeyId } = useParams();
   const [preview, setPreview] = useState(null);
   const [form, setForm] = useState({
@@ -78,7 +78,7 @@ export default function NewJourney() {
       style={{ backgroundColor: "#ececec", height: "100vh" }}
     >
       <div className="container row mx-auto mb-5 fw-bold">
-        <p className="animate-character" style={{ fontSize: "2.5rem" }}>
+        <p className="" style={{ fontSize: "2.5rem" }}>
           Edit Journey
         </p>
       </div>
@@ -106,7 +106,7 @@ export default function NewJourney() {
             controlId="formBasic"
           >
             {preview ? (
-              <Image
+              <img
                 className="shadow-lg"
                 style={{ borderRadius: "0.5rem" }}
                 src={preview}
@@ -138,7 +138,7 @@ export default function NewJourney() {
             className="my-4"
             dangerouslySetInnerHTML={{ __html: form.description }}
           />
-          <Button
+          <button
             className="fw-bold btn-blue"
             style={{ fontSize: "0.9rem" }}
             variant=""
@@ -146,7 +146,7 @@ export default function NewJourney() {
             onClick={handleSubmit}
           >
             Submit
-          </Button>
+          </button>
         </Form>
       </div>
     </div>

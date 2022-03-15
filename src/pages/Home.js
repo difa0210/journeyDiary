@@ -1,15 +1,11 @@
 import { useEffect, useState, useContext } from "react";
-import { Button, InputGroup, FormControl, Card, Alert } from "react-bootstrap";
+import { InputGroup, FormControl, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { API, setAuthToken } from "../config/api";
-import Bookmark from "../images/bookmark.png";
-import Bookmarked from "../images/bookmarked.png";
-import { ModalContext } from "../context/ModalContext";
+import { API } from "../config/api";
 import { UserContext } from "../context/userContext";
 
 export default function Home() {
   const navigate = useNavigate();
-  const [, , , , toggle] = useContext(ModalContext);
   const [user] = useContext(UserContext);
   console.log(user);
   const [allJourney, setAllJourney] = useState([]);
@@ -59,39 +55,13 @@ export default function Home() {
     }
   }, [user]);
 
-  const handleSubmit = async (e, index, id, value) => {
-    e.preventDefault();
-    allJourney[index].isBookmark = value;
-    setAllJourney([...allJourney]);
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-
-      const data = {
-        journeyId: id,
-        value,
-      };
-      console.log(data);
-      const body = JSON.stringify(data);
-
-      const response = await API.post(`/bookmark`, body, config);
-
-      console.log(response);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
-
   return (
     <div
       className="container py-5"
       style={{ backgroundColor: "#ececec", height: "100%" }}
     >
       <div className="container row text-black mx-auto mb-5 fw-bold">
-        <p className="animate-character" style={{ fontSize: "2.5rem" }}>
+        <p className="" style={{ fontSize: "2.5rem" }}>
           Journey
         </p>
       </div>
@@ -108,7 +78,7 @@ export default function Home() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
 
-            <Button
+            <button
               className="btn-blue shadow fw-bold"
               variant=""
               type="submit"
@@ -116,7 +86,7 @@ export default function Home() {
               onClick={(e) => search(e, searchQuery, user?.id)}
             >
               Search
-            </Button>
+            </button>
           </InputGroup>
         </form>
       </div>
@@ -131,48 +101,11 @@ export default function Home() {
                 <Card.Img
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    navigate(`/detailJourney/${item.id}`);
+                    navigate(`/detailjourney/${item.id}`);
                   }}
                   variant="top"
                   src={`http://localhost:5000/uploads/${item.image}`}
                 />
-                <span
-                  onClick={(e) => {
-                    if (user) {
-                      handleSubmit(e, index, item.id, !item.isBookmark);
-                    } else {
-                      toggle("Login");
-                    }
-                  }}
-                >
-                  {user && (
-                    <span
-                      className="shadow position-absolute top-0 end-0 p-1"
-                      style={{
-                        cursor: "pointer",
-                        background: "white",
-                        borderRadius: "0.1rem",
-                        margin: "0.5rem",
-                      }}
-                    >
-                      {item.isBookmark ? (
-                        <img
-                          style={{
-                            height: "1.5rem",
-                          }}
-                          src={Bookmarked}
-                        />
-                      ) : (
-                        <img
-                          style={{
-                            height: "1.5rem",
-                          }}
-                          src={Bookmark}
-                        />
-                      )}
-                    </span>
-                  )}
-                </span>
                 <Card.Body>
                   <Card.Title className="text-truncate">
                     {item.title}
