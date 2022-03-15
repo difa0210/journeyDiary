@@ -10,6 +10,7 @@ exports.register = async (req, res) => {
     email: joi.string().email().min(5),
     password: joi.string().min(3),
     phone: joi.number().min(9),
+    address: joi.string(),
   });
 
   const { error } = schema.validate(req.body);
@@ -38,6 +39,7 @@ exports.register = async (req, res) => {
     const token = jwt.sign({ id: User.id }, process.env.SECRET_KEY);
 
     res.status(201).send({
+      status: "success",
       message: "register success",
       data: {
         newUser,
@@ -94,6 +96,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign({ id: userExist.id }, process.env.SECRET_KEY);
 
     res.status(200).send({
+      status: "success",
       message: "login success",
       username: userExist.email,
       token,
@@ -127,12 +130,14 @@ exports.checkAuth = async (req, res) => {
     }
     res.status(200).send({
       status: "success",
+      status: `check-auth ${id} success`,
       user: {
         id: data.id,
         name: data.name,
         email: data.email,
         phone: data.phone,
         address: data.address,
+        image: process.env.FILE_PATH + data.image,
       },
     });
   } catch (error) {
@@ -145,19 +150,6 @@ exports.checkAuth = async (req, res) => {
 };
 
 exports.updateProfile = async (req, res) => {
-  const schema = joi.object({
-    name: joi.string().min(3),
-    email: joi.string().email().min(5),
-    password: joi.string().min(3),
-    phone: joi.number().min(9),
-  });
-
-  const { error } = schema.validate(req.body);
-  if (error)
-    return res.status(400).send({
-      error,
-    });
-
   try {
     const { id } = req.params;
     const body = req.body;
@@ -166,15 +158,15 @@ exports.updateProfile = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    const newUser = await User.update(
+    await User.update(
       {
         ...data,
         name: req.body.name,
         email: req.body.email,
         password: hashedPassword,
         phone: req.body.phone,
-        address: req.body.address,
         image: req.file.filename,
+        address: req.body.address,
       },
       {
         where: {
@@ -183,15 +175,20 @@ exports.updateProfile = async (req, res) => {
       }
     );
 
-    const SECRET_KEY = "Difa Tampan";
-    const token = jwt.sign({ id: User.id }, SECRET_KEY);
-
+    const token = jwt.sign({ id: User.id }, process.env.SECRET_KEY);
+    const user = await User.findOne({ where: { id } });
     res.status(201).send({
-      message: "update success",
-      data: {
-        newUser,
-        token,
+      status: "success",
+      message: `update user ${id} success`,
+      updateUser: {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        phone: user.phone,
+        address: user.address,
+        image: process.env.FILE_PATH + user.image,
       },
+      token,
     });
   } catch (error) {
     console.log(error);

@@ -47,6 +47,7 @@ exports.addJourney = async (req, res) => {
     });
 
     res.status(200).send({
+      status: "success",
       message: "success",
       getJourney,
     });
@@ -82,10 +83,10 @@ exports.updateJourney = async (req, res) => {
     const updateJourney = await Journey.findOne({ where: { id } });
     res.status(201).send({
       status: "success",
+      message: `update ${id} success`,
       data: {
         updateJourney,
       },
-      message: "update product success",
     });
   } catch (error) {
     console.log(error);
@@ -115,6 +116,7 @@ exports.getJourneysUser = async (req, res) => {
     });
 
     res.status(200).send({
+      status: "success",
       message: "success",
       data: {
         allprofile: profile.map((item) => ({
@@ -168,6 +170,7 @@ exports.getJourneys = async (req, res) => {
       ],
     });
     res.status(200).send({
+      status: "success",
       message: "success",
       journeys,
     });
@@ -199,6 +202,7 @@ exports.getJourneyDetail = async (req, res) => {
       ],
     });
     res.status(200).send({
+      status: "success",
       message: "success",
       journey: {
         date: journey.date,
@@ -251,6 +255,7 @@ exports.getJourneySearch = async (req, res) => {
       ],
     });
     res.status(200).send({
+      status: "success",
       message: "success",
       journeys,
     });
@@ -272,7 +277,7 @@ exports.deleteJourney = async (req, res) => {
       },
     });
     res.status(201).send({
-      status: "delete success",
+      status: "success",
     });
   } catch (error) {
     console.log(error);

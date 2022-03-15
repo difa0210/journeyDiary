@@ -29,6 +29,7 @@ exports.addBookmark = async (req, res) => {
     }
 
     res.status(200).send({
+      status: "success",
       message: "success",
       data,
     });
@@ -70,6 +71,7 @@ exports.getBookmarks = async (req, res) => {
     });
 
     res.status(200).send({
+      status: "success",
       message: "success",
       bookmarks,
     });
@@ -91,7 +93,8 @@ exports.deleteBookmark = async (req, res) => {
       },
     });
     res.status(201).send({
-      status: "delete success",
+      status: "success",
+      message: "delete success",
     });
   } catch (error) {
     console.log(error);
